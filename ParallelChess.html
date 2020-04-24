@@ -29,9 +29,9 @@
 
         if (isOccupied(obj)) {
             if (isSelected(obj)) {
-                obj.selected = "no";
+                obj.dataset.selected = "no";
             } else {
-                obj.selected = "yes";
+                obj.dataset.selected = "yes";
             }
             updateTile(obj);
         }
@@ -40,9 +40,8 @@
     function updateTile(obj) {
 
         if (isOccupied(obj)) {
-
-            if (obj.tileColour == "beige") {
-                if (obj.occupant == "white") {
+            if (obj.dataset.tileColour == "beige") {
+                if (obj.dataset.occupant == "white") {
                     if (isSelected(obj)) {
                         obj.src = "beige_white_selected.PNG";
                     } else {
@@ -56,7 +55,7 @@
                     }
                 }
             } else {
-                if (obj.occupant == "white") {
+                if (obj.dataset.occupant == "white") {
                     if (isSelected(obj)) {
                         obj.src = "terracotta_white_selected.PNG";
                     } else {
@@ -71,7 +70,7 @@
                 }
             }
         } else {
-            if (obj.tileColour == "beige") {
+            if (obj.dataset.tileColour == "beige") {
                 obj.src = "beige.PNG";
             } else {
                 obj.src = "terracotta.PNG";
@@ -81,13 +80,13 @@
 
     function isOccupied(tile) {
 
-        return tile.occupant != "empty";
+        return tile.dataset.occupant != "empty";
 
     }
 
     function isSelected(tile) {
 
-        return tile.selected == "yes";
+        return tile.dataset.selected == "yes";
 
     }
 
@@ -117,8 +116,8 @@
                 i = document.createElement("IMG");                         
                 c.appendChild(i);                      
                 att = document.createAttribute("src");
-                att1 = document.createAttribute("tileColour");
-                att2 = document.createAttribute("occupant");
+                att1 = document.createAttribute("data-tile-colour");
+                att2 = document.createAttribute("data-occupant");
                 if (x % 2 == 0) {
                     att.value = "beige.PNG";
                     att1.value = "beige";
@@ -145,7 +144,7 @@
                 att = document.createAttribute("id");
                 att.value = ((m + 1).toString()).concat(String.fromCharCode(97 + n));
                 i.setAttributeNode(att);
-                att = document.createAttribute("selected");
+                att = document.createAttribute("data-selected");
                 att.value = "no";
                 i.setAttributeNode(att);
                 att = document.createAttribute("onclick");

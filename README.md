@@ -5,3 +5,5 @@ There is a basic framework to build upon. Gonna need help to make it reactive th
 Entry 2: Gonna make checkers first (might as well) as it's easier. Got a foundation for it down, but it's still fucked with bugs. 
 
 Entry 3: Fixed the bugs. Got a nice simple framework down for checkers or whatever the fuck.
+
+Entry 4: I guess we are making checkers. You can now play a very strange version of checkers, where killing a piece gives you a bonus turn, and without the special "king piece" in checkers. Idk what its called. But otherwise, it works. Need to make everything scalable and responsive. It is shit in that regard.

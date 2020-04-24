@@ -15,13 +15,14 @@
 </style>
 
 <script>
+    
+    turn = "white";
 
-    function changeSquareColour(obj) {
-
-        if ((obj.src).includes("beige")){
-            obj.src = "terracotta.PNG";
+    function changeTurn() {
+        if (turn == "white") {
+            turn = "black";
         } else {
-            obj.src = "beige.PNG";
+            turn = "white";
         }
     }
 
@@ -30,10 +31,20 @@
         if (isOccupied(obj)) {
             if (isSelected(obj)) {
                 obj.dataset.selected = "no";
-            } else {
+                updateTile(obj);
+            } else if (! isAnySelected() && obj.dataset.occupant == turn) {
                 obj.dataset.selected = "yes";
+                updateTile(obj);
             }
-            updateTile(obj);
+            
+        } else if (isAnySelected()) {
+            if (isLegalMove(getSelected(), obj)) {
+                obj.dataset.occupant = getSelected().dataset.occupant;
+                getSelected().dataset.occupant = "empty";
+                updateTile(obj);
+                updateTile(getSelected());
+                getSelected().dataset.selected = "no";
+            }
         }
     }
 
@@ -78,6 +89,71 @@
         }
     }
 
+    function isLegalMove(tile1, tile2) {
+
+        if (tile1.dataset.occupant == "white") {
+            if ((parseInt(tile2.id.charAt(0)) == parseInt(tile1.id.charAt(0)) + 1) && ((tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() + 1) || (tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() - 1))) {
+                    changeTurn();
+                    return true;
+                
+            } else if (parseInt(tile2.id.charAt(0)) == parseInt(tile1.id.charAt(0)) + 2) {
+                if (tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() + 2) {
+                    killTile = document.getElementById(((parseInt(tile1.id.charAt(0)) + 1).toString()).concat(String.fromCharCode(tile1.id.charAt(1).charCodeAt() + 1)));
+                    if (killTile.dataset.occupant == "black") {
+                        killTile.dataset.occupant = "empty";
+                        updateTile(killTile);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() - 2) {
+                    killTile = document.getElementById(((parseInt(tile1.id.charAt(0)) + 1).toString()).concat(String.fromCharCode(tile1.id.charAt(1).charCodeAt() - 1)));
+                    if (killTile.dataset.occupant == "black") {
+                        killTile.dataset.occupant = "empty";
+                        updateTile(killTile);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            if ((parseInt(tile2.id.charAt(0)) == parseInt(tile1.id.charAt(0)) - 1) && ((tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() + 1) || (tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() - 1))) {
+                    changeTurn();
+                    return true;
+                
+            } else if (parseInt(tile2.id.charAt(0)) == parseInt(tile1.id.charAt(0)) - 2) {
+                if (tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() + 2) {
+                    killTile = document.getElementById(((parseInt(tile1.id.charAt(0)) - 1).toString()).concat(String.fromCharCode(tile1.id.charAt(1).charCodeAt() + 1)));
+                    if (killTile.dataset.occupant == "white") {
+                        killTile.dataset.occupant = "empty";
+                        updateTile(killTile);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() - 2) {
+                    killTile = document.getElementById(((parseInt(tile1.id.charAt(0)) - 1).toString()).concat(String.fromCharCode(tile1.id.charAt(1).charCodeAt() - 1)));
+                    if (killTile.dataset.occupant == "white") {
+                        killTile.dataset.occupant = "empty";
+                        updateTile(killTile);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+
     function isOccupied(tile) {
 
         return tile.dataset.occupant != "empty";
@@ -87,6 +163,18 @@
     function isSelected(tile) {
 
         return tile.dataset.selected == "yes";
+
+    }
+
+    function isAnySelected() {
+
+        return (document.querySelector('[data-selected="yes"]') != null);
+
+    }
+
+    function getSelected() {
+
+        return document.querySelector('[data-selected="yes"]');
 
     }
 

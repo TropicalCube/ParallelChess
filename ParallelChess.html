@@ -18,27 +18,88 @@
 
     function changeSquareColour(obj) {
 
-        var n =  (obj.src).includes("beige");
-        
-        if (n == true){
-            obj.src = "black_square.PNG";
+        if ((obj.src).includes("beige")){
+            obj.src = "terracotta.PNG";
         } else {
-            obj.src = "beige_square.PNG";
+            obj.src = "beige.PNG";
         }
+    }
+
+    function selectTile(obj) {
+
+        if (isOccupied(obj)) {
+            if (isSelected(obj)) {
+                obj.selected = "no";
+            } else {
+                obj.selected = "yes";
+            }
+            updateTile(obj);
+        }
+    }
+
+    function updateTile(obj) {
+
+        if (isOccupied(obj)) {
+
+            if (obj.tileColour == "beige") {
+                if (obj.occupant == "white") {
+                    if (isSelected(obj)) {
+                        obj.src = "beige_white_selected.PNG";
+                    } else {
+                        obj.src = "beige_white.PNG";
+                    }
+                } else {
+                    if (isSelected(obj)) {
+                        obj.src = "beige_black_selected.PNG";
+                    } else {
+                        obj.src = "beige_black.PNG";
+                    }
+                }
+            } else {
+                if (obj.occupant == "white") {
+                    if (isSelected(obj)) {
+                        obj.src = "terracotta_white_selected.PNG";
+                    } else {
+                        obj.src = "terracotta_white.PNG";
+                    }
+                } else {
+                    if (isSelected(obj)) {
+                        obj.src = "terracotta_black_selected.PNG";
+                    } else {
+                        obj.src = "terracotta_black.PNG";
+                    }
+                }
+            }
+        } else {
+            if (obj.tileColour == "beige") {
+                obj.src = "beige.PNG";
+            } else {
+                obj.src = "terracotta.PNG";
+            }
+        }
+    }
+
+    function isOccupied(tile) {
+
+        return tile.occupant != "empty";
+
+    }
+
+    function isSelected(tile) {
+
+        return tile.selected == "yes";
+
     }
 
     function buildBoard() {
 
-        var d1 = document.createElement("DIV");             
+        d1 = document.createElement("DIV");             
         document.body.appendChild(d1);                      
-        var att = document.createAttribute("class");
+        att = document.createAttribute("class");
         att.value = "row";
         d1.setAttributeNode(att);
 
-        var n;
-        var m;
-        var i;
-        var c;
+        y = 1;
         
         for (m = 0; m < 8; m++) {
             c = document.createElement("DIV");                         
@@ -46,19 +107,52 @@
             att = document.createAttribute("class");
             att.value = "column";
             c.setAttributeNode(att);
+            if (m % 2 == 0) {
+                x = 0;
+            } else {
+                x = 1;
+            }
             
             for (n = 0; n < 8; n++) {
                 i = document.createElement("IMG");                         
                 c.appendChild(i);                      
                 att = document.createAttribute("src");
-                att.value = "beige_square.PNG";
+                att1 = document.createAttribute("tileColour");
+                att2 = document.createAttribute("occupant");
+                if (x % 2 == 0) {
+                    att.value = "beige.PNG";
+                    att1.value = "beige";
+                    att2.value = "empty";
+                } else if (y < 25) {
+                    att.value = "terracotta_white.PNG";
+                    att1.value = "terracotta";
+                    att2.value = "white";
+                } else if (y > 40) {
+                    att.value = "terracotta_black.PNG";
+                    att1.value = "terracotta";
+                    att2.value = "black";
+                } else {
+                    att.value = "terracotta.PNG";
+                    att1.value = "terracotta";
+                    att2.value = "empty";
+                }
                 i.setAttributeNode(att);
+                i.setAttributeNode(att1);
+                i.setAttributeNode(att2);
                 att = document.createAttribute("class");
                 att.value = "tile";
                 i.setAttributeNode(att);
-                att = document.createAttribute("onclick");
-                att.value = "changeSquareColour(this)";
+                att = document.createAttribute("id");
+                att.value = ((m + 1).toString()).concat(String.fromCharCode(97 + n));
                 i.setAttributeNode(att);
+                att = document.createAttribute("selected");
+                att.value = "no";
+                i.setAttributeNode(att);
+                att = document.createAttribute("onclick");
+                att.value = "selectTile(this)";
+                i.setAttributeNode(att);
+                x++;
+                y++;
             }
         }  
     }
@@ -69,7 +163,7 @@
 
 <body onload="buildBoard()">
 
-<h1>Welcome to this piece of shit</h1>
+<h1>Parallel Chess</h1>
 
 </body>
 

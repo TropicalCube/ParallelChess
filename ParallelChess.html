@@ -37,6 +37,28 @@ h1 {
 
 <script>
     
+    imageFolderPath = "images";
+
+    beigeFileName = "beige.PNG";
+    brownFileName = "terracotta.PNG";
+    brownEligibleFileName = "terracotta_eligible.PNG";
+    brownWhiteFileName = "terracotta_white.PNG";
+    brownWhiteSelectedFileName = "terracotta_white_selected.PNG";
+    brownWhiteEligibleFileName = "terracotta_white_eligible.PNG";
+    brownBlackFileName = "terracotta_black.PNG";
+    brownBlackSelectedFileName = "terracotta_black_selected.PNG";
+    brownBlackEligibleFileName = "terracotta_black_eligible.PNG";
+
+    beigeFilePath = imageFolderPath.concat("/", beigeFileName);
+    brownFilePath = imageFolderPath.concat("/", brownFileName);
+    brownEligibleFilePath = imageFolderPath.concat("/", brownEligibleFileName);
+    brownWhiteFilePath = imageFolderPath.concat("/", brownWhiteFileName);
+    brownWhiteSelectedFilePath = imageFolderPath.concat("/", brownWhiteSelectedFileName);
+    brownWhiteEligibleFilePath = imageFolderPath.concat("/", brownWhiteEligibleFileName);
+    brownBlackFilePath = imageFolderPath.concat("/", brownBlackFileName);
+    brownBlackSelectedFilePath = imageFolderPath.concat("/", brownBlackSelectedFileName);
+    brownBlackEligibleFilePath = imageFolderPath.concat("/", brownBlackEligibleFileName);
+
     turn = "white";
 
     function changeTurn() {
@@ -72,41 +94,27 @@ h1 {
     function updateTile(obj) {
 
         if (isOccupied(obj)) {
-            if (obj.dataset.tileColour == "beige") {
-                if (obj.dataset.occupant == "white") {
-                    if (isSelected(obj)) {
-                        obj.src = "beige_white_selected.PNG";
-                    } else {
-                        obj.src = "beige_white.PNG";
-                    }
+            if (obj.dataset.occupant == "white") {
+                if (isSelected(obj)) {
+                    obj.src = brownWhiteSelectedFilePath;
+                } else if (isEligible(obj)) {
+                    obj.src = brownWhiteEligibleFilePath;
                 } else {
-                    if (isSelected(obj)) {
-                        obj.src = "beige_black_selected.PNG";
-                    } else {
-                        obj.src = "beige_black.PNG";
-                    }
+                    obj.src = brownWhiteFilePath;
                 }
             } else {
-                if (obj.dataset.occupant == "white") {
-                    if (isSelected(obj)) {
-                        obj.src = "terracotta_white_selected.PNG";
-                    } else {
-                        obj.src = "terracotta_white.PNG";
-                    }
+                if (isSelected(obj)) {
+                    obj.src = brownBlackSelectedFilePath;
+                } else if (isEligible(obj)) {
+                    obj.src = brownBlackEligibleFilePath;
                 } else {
-                    if (isSelected(obj)) {
-                        obj.src = "terracotta_black_selected.PNG";
-                    } else {
-                        obj.src = "terracotta_black.PNG";
-                    }
+                    obj.src = brownBlackFilePath;
                 }
             }
+        } else if (isEligible(obj)) {
+            obj.src = brownEligibleFilePath;
         } else {
-            if (obj.dataset.tileColour == "beige") {
-                obj.src = "beige.PNG";
-            } else {
-                obj.src = "terracotta.PNG";
-            }
+            obj.src = brownFilePath;
         }
     }
 
@@ -176,27 +184,23 @@ h1 {
     }
 
     function isOccupied(tile) {
-
         return tile.dataset.occupant != "empty";
-
     }
 
     function isSelected(tile) {
-
         return tile.dataset.selected == "yes";
-
     }
 
     function isAnySelected() {
-
         return (document.querySelector('[data-selected="yes"]') != null);
-
     }
 
     function getSelected() {
-
         return document.querySelector('[data-selected="yes"]');
+    }
 
+    function isEligible(tile) {
+        return tile.dataset.eligible == "yes";
     }
 
     function buildBoard() {
@@ -228,20 +232,20 @@ h1 {
                 att1 = document.createAttribute("data-tile-colour");
                 att2 = document.createAttribute("data-occupant");
                 if (x % 2 == 0) {
-                    att.value = "beige.PNG";
+                    att.value = beigeFilePath;
                     att1.value = "beige";
                     att2.value = "empty";
                 } else if (y < 25) {
-                    att.value = "terracotta_white.PNG";
-                    att1.value = "terracotta";
+                    att.value = brownWhiteFilePath;
+                    att1.value = "brown";
                     att2.value = "white";
                 } else if (y > 40) {
-                    att.value = "terracotta_black.PNG";
-                    att1.value = "terracotta";
+                    att.value = brownBlackFilePath;
+                    att1.value = "brown";
                     att2.value = "black";
                 } else {
-                    att.value = "terracotta.PNG";
-                    att1.value = "terracotta";
+                    att.value = brownFilePath;
+                    att1.value = "brown";
                     att2.value = "empty";
                 }
                 i.setAttributeNode(att);
@@ -252,6 +256,9 @@ h1 {
                 i.setAttributeNode(att);
                 att = document.createAttribute("id");
                 att.value = ((m + 1).toString()).concat(String.fromCharCode(97 + n));
+                i.setAttributeNode(att);
+                att = document.createAttribute("data-eligible");
+                att.value = "no";
                 i.setAttributeNode(att);
                 att = document.createAttribute("data-selected");
                 att.value = "no";

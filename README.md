@@ -15,3 +15,5 @@ Entry 6: Adding checkers but without the king piece mechanic. There is still one
 Entry 7: Made checkerboard centered
 
 Entry 8: Added fully funcitonal checkers without kingpiece mechanic.
+
+Entry 9: Added resources and enabled them for the kingpiece mechanic.

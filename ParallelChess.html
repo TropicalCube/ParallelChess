@@ -79,9 +79,7 @@
                     }
                 } else if (isAnySelected()) {
                     if (makeLegalMove(getSelected(), obj)) {
-                        //obj.dataset.occupant = getSelected().dataset.occupant;
                         getSelected().dataset.occupant = "empty";
-                        //updateTile(obj);
                         updateTile(getSelected());
                         getSelected().dataset.selected = "no";
                         refreshEligible();
@@ -211,8 +209,16 @@
             return (document.querySelector('[data-selected="yes"]') != null);
         }
 
+        function isAnyJumping() {
+            return (document.querySelector('[data-jumping="yes"]') != null);
+        }
+
         function getSelected() {
             return document.querySelector('[data-selected="yes"]');
+        }
+
+        function getJumping() {
+            return document.querySelector('[data-jumping="yes"]');
         }
 
         function isEligible(tile) {
@@ -229,7 +235,6 @@
             eligibleMoves = [];
             eligibleMoves.push([]);
             eligibleMoves.push([]);
-            console.log(secondaryAdjacent[0]);
             if (secondaryAdjacent[0] && !isOccupied(document.getElementById(secondaryAdjacent[0])) && areOccupantsInverse(document.getElementById(primaryAdjacent[0]), tile)) {
                 eligibleMoves[1].push(secondaryAdjacent[0]);
             }
@@ -264,6 +269,10 @@
                         updateTile(eTile);
                     }
                 }
+            } else if (isAnyJumping()) {
+                eTile = getJumping();
+                eTile.dataset.eligible = "yes";
+                updateTile(eTile);
             } else {
                 updateAllEligible();
             }
@@ -305,18 +314,13 @@
             }
         }
 
-
-
         function buildBoard() {
-
             d1 = document.createElement("DIV");
             document.body.appendChild(d1);
             att = document.createAttribute("class");
             att.value = "row";
             d1.setAttributeNode(att);
-
             y = 1;
-
             for (m = 0; m < 8; m++) {
                 c = document.createElement("DIV");
                 d1.appendChild(c);
@@ -328,11 +332,9 @@
                 } else {
                     x = 1;
                 }
-
                 for (n = 0; n < 8; n++) {
                     i = document.createElement("IMG");
                     c.appendChild(i);
-
                     if (x % 2 == 0) {
                         imgSrc = beigeFilePath;
                         tileColour = "beige";
@@ -350,7 +352,6 @@
                         tileColour = "brown";
                         occupant = "empty";
                     }
-
                     att = document.createAttribute("src");
                     att.value = imgSrc;
                     i.setAttributeNode(att);

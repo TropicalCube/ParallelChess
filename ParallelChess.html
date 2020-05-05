@@ -119,6 +119,9 @@
         }
 
         function isIdValid(idString) {
+            if (idString.length > 2) {
+                return false;
+            }
             return /[1-8][a-h]/.test(idString);
         }
 
@@ -228,6 +231,7 @@
             eligibleMoves = [];
             eligibleMoves.push([]);
             eligibleMoves.push([]);
+            console.log(secondaryAdjacent[0]);
             if (secondaryAdjacent[0] && !isOccupied(document.getElementById(secondaryAdjacent[0])) && areOccupantsInverse(document.getElementById(primaryAdjacent[0]), tile)) {
                 eligibleMoves[1].push(secondaryAdjacent[0]);
             }
@@ -276,8 +280,6 @@
             anyJumping = false;
             auxList = [];
             for (i = 0; i < allEligible.length; i++) {
-                console.log(getEligibleMoves(allEligible[i])[1]);
-                console.log(getEligibleMoves(allEligible[i])[0]);
                 if (getEligibleMoves(allEligible[i])[1].length > 0) {
                     if (!anyJumping) {
                         anyJumping = true;
@@ -286,7 +288,6 @@
                     updateTile(allEligible[i]);
                 }
                 else if (getEligibleMoves(allEligible[i])[0].length > 0 && !anyJumping) {
-                    console.log("entered block");
                     auxList.push(allEligible[i]);
                 }
             }
@@ -306,7 +307,7 @@
             }
         }
 
-        
+
 
         function buildBoard() {
 

@@ -92,6 +92,7 @@
                 } else if (isAnySelected()) {
                     if (makeLegalMove(getSelected(), obj)) {
                         getSelected().dataset.occupant = "empty";
+                        getSelected().dataset.kingpiece = "no";
                         updateTile(getSelected());
                         getSelected().dataset.selected = "no";
                         refreshEligible();
@@ -104,19 +105,43 @@
             if (isOccupied(obj)) {
                 if (obj.dataset.occupant == "white") {
                     if (isSelected(obj)) {
-                        obj.src = brownWhiteSelectedFilePath;
+                        if (isKingpiece(obj)) {
+                            obj.src = brownWhiteKingSelectedFilePath;
+                        } else {
+                            obj.src = brownWhiteSelectedFilePath;
+                        }
                     } else if (isEligible(obj)) {
-                        obj.src = brownWhiteEligibleFilePath;
+                        if (isKingpiece(obj)) {
+                            obj.src = brownWhiteKingEligibleFilePath;
+                        } else {
+                            obj.src = brownWhiteEligibleFilePath;
+                        }
                     } else {
-                        obj.src = brownWhiteFilePath;
+                        if (isKingpiece(obj)) {
+                            obj.src = brownWhiteKingFilePath;
+                        } else {
+                            obj.src = brownWhiteFilePath;
+                        }
                     }
                 } else {
                     if (isSelected(obj)) {
-                        obj.src = brownBlackSelectedFilePath;
+                        if (isKingpiece(obj)) {
+                            obj.src = brownBlackKingSelectedFilePath;
+                        } else {
+                            obj.src = brownBlackSelectedFilePath;
+                        }
                     } else if (isEligible(obj)) {
-                        obj.src = brownBlackEligibleFilePath;
+                        if (isKingpiece(obj)) {
+                            obj.src = brownBlackKingEligibleFilePath;
+                        } else {
+                            obj.src = brownBlackEligibleFilePath;
+                        }
                     } else {
-                        obj.src = brownBlackFilePath;
+                        if (isKingpiece(obj)) {
+                            obj.src = brownBlackKingFilePath;
+                        } else {
+                            obj.src = brownBlackFilePath;
+                        }
                     }
                 }
             } else if (isEligible(obj)) {
@@ -134,12 +159,23 @@
         }
 
         function getPrimaryAdjacent(tile) {
-            if (tile.dataset.occupant == "white") {
+            id1 = "";
+            id2 = "";
+            id3 = "";
+            id4 = "";
+            if (isKingpiece(tile)) {
                 id1 = ((parseInt(tile.id.charAt(0)) + 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 1));
                 id2 = ((parseInt(tile.id.charAt(0)) + 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 1));
+                id3 = ((parseInt(tile.id.charAt(0)) - 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 1));
+                id4 = ((parseInt(tile.id.charAt(0)) - 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 1));
             } else {
-                id1 = ((parseInt(tile.id.charAt(0)) - 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 1));
-                id2 = ((parseInt(tile.id.charAt(0)) - 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 1));
+                if (tile.dataset.occupant == "white") {
+                    id1 = ((parseInt(tile.id.charAt(0)) + 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 1));
+                    id2 = ((parseInt(tile.id.charAt(0)) + 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 1));
+                } else {
+                    id1 = ((parseInt(tile.id.charAt(0)) - 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 1));
+                    id2 = ((parseInt(tile.id.charAt(0)) - 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 1));
+                }
             }
             ids = [];
             if (isIdValid(id1)) {
@@ -149,6 +185,16 @@
             }
             if (isIdValid(id2)) {
                 ids.push(id2);
+            } else {
+                ids.push("");
+            }
+            if (isIdValid(id3)) {
+                ids.push(id3);
+            } else {
+                ids.push("");
+            }
+            if (isIdValid(id4)) {
+                ids.push(id4);
             } else {
                 ids.push("");
             }
@@ -156,12 +202,23 @@
         }
 
         function getSecondaryAdjacent(tile) {
-            if (tile.dataset.occupant == "white") {
+            id1 = "";
+            id2 = "";
+            id3 = "";
+            id4 = "";
+            if (isKingpiece(tile)) {
                 id1 = ((parseInt(tile.id.charAt(0)) + 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 2));
                 id2 = ((parseInt(tile.id.charAt(0)) + 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 2));
+                id3 = ((parseInt(tile.id.charAt(0)) - 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 2));
+                id4 = ((parseInt(tile.id.charAt(0)) - 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 2));
             } else {
-                id1 = ((parseInt(tile.id.charAt(0)) - 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 2));
-                id2 = ((parseInt(tile.id.charAt(0)) - 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 2));
+                if (tile.dataset.occupant == "white") {
+                    id1 = ((parseInt(tile.id.charAt(0)) + 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 2));
+                    id2 = ((parseInt(tile.id.charAt(0)) + 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 2));
+                } else {
+                    id1 = ((parseInt(tile.id.charAt(0)) - 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 2));
+                    id2 = ((parseInt(tile.id.charAt(0)) - 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 2));
+                }
             }
             ids = [];
             if (isIdValid(id1)) {
@@ -171,6 +228,16 @@
             }
             if (isIdValid(id2)) {
                 ids.push(id2);
+            } else {
+                ids.push("");
+            }
+            if (isIdValid(id3)) {
+                ids.push(id3);
+            } else {
+                ids.push("");
+            }
+            if (isIdValid(id4)) {
+                ids.push(id4);
             } else {
                 ids.push("");
             }
@@ -180,6 +247,12 @@
         function makeLegalMove(tile1, tile2) {
             if (getPrimaryAdjacent(tile1).includes(tile2.id)) {
                 tile2.dataset.occupant = tile1.dataset.occupant;
+                tile2.dataset.kingpiece = tile1.dataset.kingpiece;
+                if (tile2.dataset.kingpiece == "no") {
+                    if (isOccupantAtEdge(tile2)) {
+                        tile2.dataset.kingpiece = "yes";
+                    }
+                }
                 updateTile(tile2);
                 changeTurn();
                 return true;
@@ -188,13 +261,24 @@
             if (secondaryTiles.includes(tile2.id)) {
                 if (tile2.id == secondaryTiles[0]) {
                     killTile = document.getElementById(getPrimaryAdjacent(tile1)[0]);
-                } else {
+                } else if (tile2.id == secondaryTiles[1]) {
                     killTile = document.getElementById(getPrimaryAdjacent(tile1)[1]);
+                } else if (tile2.id == secondaryTiles[2]) {
+                    killTile = document.getElementById(getPrimaryAdjacent(tile1)[2]);
+                } else {
+                    killTile = document.getElementById(getPrimaryAdjacent(tile1)[3]);
                 }
                 if (areOccupantsInverse(tile1, killTile)) {
                     killTile.dataset.occupant = "empty";
+                    killTile.dataset.kingpiece = "no";
                     updateTile(killTile);
                     tile2.dataset.occupant = tile1.dataset.occupant;
+                    tile2.dataset.kingpiece = tile1.dataset.kingpiece;
+                    if (tile2.dataset.kingpiece == "no") {
+                        if (isOccupantAtEdge(tile2)) {
+                            tile2.dataset.kingpiece = "yes";
+                        }
+                    }
                     updateTile(tile2);
                     if (getEligibleMoves(tile2)[1].length > 0) {
                         tile2.dataset.jumping = "yes";
@@ -237,8 +321,28 @@
             return tile.dataset.eligible == "yes";
         }
 
+        function isKingpiece(tile) {
+            return tile.dataset.kingpiece == "yes";
+        }
+
         function areOccupantsInverse(tile1, tile2) {
             return (tile1.dataset.occupant == "white" && tile2.dataset.occupant == "black") || (tile1.dataset.occupant == "black" && tile2.dataset.occupant == "white");
+        }
+
+        function isOccupantAtEdge(tile) {
+            if (tile.dataset.occupant == "white") {
+                if (parseInt(tile.id.charAt(0)) > 7) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                if (parseInt(tile.id.charAt(0)) < 2) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
 
         function getEligibleMoves(tile) {
@@ -253,12 +357,24 @@
             if (secondaryAdjacent[1] && !isOccupied(document.getElementById(secondaryAdjacent[1])) && areOccupantsInverse(document.getElementById(primaryAdjacent[1]), tile)) {
                 eligibleMoves[1].push(secondaryAdjacent[1]);
             }
+            if (secondaryAdjacent[2] && !isOccupied(document.getElementById(secondaryAdjacent[2])) && areOccupantsInverse(document.getElementById(primaryAdjacent[2]), tile)) {
+                eligibleMoves[1].push(secondaryAdjacent[2]);
+            }
+            if (secondaryAdjacent[3] && !isOccupied(document.getElementById(secondaryAdjacent[3])) && areOccupantsInverse(document.getElementById(primaryAdjacent[3]), tile)) {
+                eligibleMoves[1].push(secondaryAdjacent[3]);
+            }
             if (eligibleMoves[1].length == 0) {
                 if (primaryAdjacent[0] && !isOccupied(document.getElementById(primaryAdjacent[0]))) {
                     eligibleMoves[0].push(primaryAdjacent[0]);
                 }
                 if (primaryAdjacent[1] && !isOccupied(document.getElementById(primaryAdjacent[1]))) {
                     eligibleMoves[0].push(primaryAdjacent[1]);
+                }
+                if (primaryAdjacent[2] && !isOccupied(document.getElementById(primaryAdjacent[2]))) {
+                    eligibleMoves[0].push(primaryAdjacent[2]);
+                }
+                if (primaryAdjacent[3] && !isOccupied(document.getElementById(primaryAdjacent[3]))) {
+                    eligibleMoves[0].push(primaryAdjacent[3]);
                 }
             }
             return eligibleMoves;
@@ -386,6 +502,9 @@
                     att.value = "no";
                     i.setAttributeNode(att);
                     att = document.createAttribute("data-jumping");
+                    att.value = "no";
+                    i.setAttributeNode(att);
+                    att = document.createAttribute("data-kingpiece");
                     att.value = "no";
                     i.setAttributeNode(att);
                     att = document.createAttribute("onclick");

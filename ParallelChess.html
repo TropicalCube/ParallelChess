@@ -4,281 +4,395 @@
 
 <head>
 
-<title>Parallel Chess</title>
+    <title>Parallel Chess</title>
 
-<style>
-
-.tile {
-  max-width: 5%;
-  height: auto;
-}
-
-.column {
-  display: flex;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-}
-
-.row {
-  
-  width: 80%;
-  margin: 0 auto;
-  padding: 20px;
-  
-  border: 10px solid green;
-}
-
-h1 {
-  text-align: center;
-}
-
-</style>
-
-<script>
-    
-    imageFolderPath = "images";
-
-    beigeFileName = "beige.PNG";
-    brownFileName = "terracotta.PNG";
-    brownEligibleFileName = "terracotta_eligible.PNG";
-    brownWhiteFileName = "terracotta_white.PNG";
-    brownWhiteSelectedFileName = "terracotta_white_selected.PNG";
-    brownWhiteEligibleFileName = "terracotta_white_eligible.PNG";
-    brownBlackFileName = "terracotta_black.PNG";
-    brownBlackSelectedFileName = "terracotta_black_selected.PNG";
-    brownBlackEligibleFileName = "terracotta_black_eligible.PNG";
-
-    beigeFilePath = imageFolderPath.concat("/", beigeFileName);
-    brownFilePath = imageFolderPath.concat("/", brownFileName);
-    brownEligibleFilePath = imageFolderPath.concat("/", brownEligibleFileName);
-    brownWhiteFilePath = imageFolderPath.concat("/", brownWhiteFileName);
-    brownWhiteSelectedFilePath = imageFolderPath.concat("/", brownWhiteSelectedFileName);
-    brownWhiteEligibleFilePath = imageFolderPath.concat("/", brownWhiteEligibleFileName);
-    brownBlackFilePath = imageFolderPath.concat("/", brownBlackFileName);
-    brownBlackSelectedFilePath = imageFolderPath.concat("/", brownBlackSelectedFileName);
-    brownBlackEligibleFilePath = imageFolderPath.concat("/", brownBlackEligibleFileName);
-
-    turn = "white";
-
-    function changeTurn() {
-        if (turn == "white") {
-            turn = "black";
-        } else {
-            turn = "white";
+    <style>
+        .tile {
+            max-width: 5%;
+            height: auto;
         }
-    }
 
-    function selectTile(obj) {
-
-        if (isOccupied(obj)) {
-            if (isSelected(obj)) {
-                obj.dataset.selected = "no";
-                updateTile(obj);
-            } else if (! isAnySelected() && obj.dataset.occupant == turn) {
-                obj.dataset.selected = "yes";
-                updateTile(obj);
-            }
-            
-        } else if (isAnySelected()) {
-            if (isLegalMove(getSelected(), obj)) {
-                obj.dataset.occupant = getSelected().dataset.occupant;
-                getSelected().dataset.occupant = "empty";
-                updateTile(obj);
-                updateTile(getSelected());
-                getSelected().dataset.selected = "no";
-            }
+        .column {
+            display: flex;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
         }
-    }
 
-    function updateTile(obj) {
+        .row {
 
-        if (isOccupied(obj)) {
-            if (obj.dataset.occupant == "white") {
-                if (isSelected(obj)) {
-                    obj.src = brownWhiteSelectedFilePath;
-                } else if (isEligible(obj)) {
-                    obj.src = brownWhiteEligibleFilePath;
-                } else {
-                    obj.src = brownWhiteFilePath;
-                }
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+
+            border: 10px solid green;
+        }
+
+        h1 {
+            text-align: center;
+        }
+    </style>
+
+    <script>
+
+        imageFolderPath = "images";
+
+        beigeFileName = "beige.PNG";
+        brownFileName = "terracotta.PNG";
+        brownEligibleFileName = "terracotta_eligible.PNG";
+        brownWhiteFileName = "terracotta_white.PNG";
+        brownWhiteSelectedFileName = "terracotta_white_selected.PNG";
+        brownWhiteEligibleFileName = "terracotta_white_eligible.PNG";
+        brownBlackFileName = "terracotta_black.PNG";
+        brownBlackSelectedFileName = "terracotta_black_selected.PNG";
+        brownBlackEligibleFileName = "terracotta_black_eligible.PNG";
+
+        beigeFilePath = imageFolderPath.concat("/", beigeFileName);
+        brownFilePath = imageFolderPath.concat("/", brownFileName);
+        brownEligibleFilePath = imageFolderPath.concat("/", brownEligibleFileName);
+        brownWhiteFilePath = imageFolderPath.concat("/", brownWhiteFileName);
+        brownWhiteSelectedFilePath = imageFolderPath.concat("/", brownWhiteSelectedFileName);
+        brownWhiteEligibleFilePath = imageFolderPath.concat("/", brownWhiteEligibleFileName);
+        brownBlackFilePath = imageFolderPath.concat("/", brownBlackFileName);
+        brownBlackSelectedFilePath = imageFolderPath.concat("/", brownBlackSelectedFileName);
+        brownBlackEligibleFilePath = imageFolderPath.concat("/", brownBlackEligibleFileName);
+
+        turn = "white";
+
+        function changeTurn() {
+            if (turn == "white") {
+                turn = "black";
             } else {
-                if (isSelected(obj)) {
-                    obj.src = brownBlackSelectedFilePath;
-                } else if (isEligible(obj)) {
-                    obj.src = brownBlackEligibleFilePath;
-                } else {
-                    obj.src = brownBlackFilePath;
+                turn = "white";
+            }
+        }
+
+        function selectTile(obj) {
+            if (isEligible(obj) || isSelected(obj)) {
+                if (isOccupied(obj)) {
+                    if (isSelected(obj)) {
+                        obj.dataset.selected = "no";
+                        updateTile(obj);
+                        refreshEligible();
+                    } else if (!isAnySelected() && obj.dataset.occupant == turn) {
+                        obj.dataset.selected = "yes";
+                        updateTile(obj);
+                        refreshEligible();
+                    }
+                } else if (isAnySelected()) {
+                    if (makeLegalMove(getSelected(), obj)) {
+                        //obj.dataset.occupant = getSelected().dataset.occupant;
+                        getSelected().dataset.occupant = "empty";
+                        //updateTile(obj);
+                        updateTile(getSelected());
+                        getSelected().dataset.selected = "no";
+                        refreshEligible();
+                    }
                 }
             }
-        } else if (isEligible(obj)) {
-            obj.src = brownEligibleFilePath;
-        } else {
-            obj.src = brownFilePath;
         }
-    }
 
-    function isLegalMove(tile1, tile2) {
+        function updateTile(obj) {
+            if (isOccupied(obj)) {
+                if (obj.dataset.occupant == "white") {
+                    if (isSelected(obj)) {
+                        obj.src = brownWhiteSelectedFilePath;
+                    } else if (isEligible(obj)) {
+                        obj.src = brownWhiteEligibleFilePath;
+                    } else {
+                        obj.src = brownWhiteFilePath;
+                    }
+                } else {
+                    if (isSelected(obj)) {
+                        obj.src = brownBlackSelectedFilePath;
+                    } else if (isEligible(obj)) {
+                        obj.src = brownBlackEligibleFilePath;
+                    } else {
+                        obj.src = brownBlackFilePath;
+                    }
+                }
+            } else if (isEligible(obj)) {
+                obj.src = brownEligibleFilePath;
+            } else {
+                obj.src = brownFilePath;
+            }
+        }
 
-        if (tile1.dataset.occupant == "white") {
-            if ((parseInt(tile2.id.charAt(0)) == parseInt(tile1.id.charAt(0)) + 1) && ((tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() + 1) || (tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() - 1))) {
-                    changeTurn();
+        function isIdValid(idString) {
+            return /[1-8][a-h]/.test(idString);
+        }
+
+        function getPrimaryAdjacent(tile) {
+            if (tile.dataset.occupant == "white") {
+                id1 = ((parseInt(tile.id.charAt(0)) + 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 1));
+                id2 = ((parseInt(tile.id.charAt(0)) + 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 1));
+            } else {
+                id1 = ((parseInt(tile.id.charAt(0)) - 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 1));
+                id2 = ((parseInt(tile.id.charAt(0)) - 1).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 1));
+            }
+            ids = [];
+            if (isIdValid(id1)) {
+                ids.push(id1);
+            } else {
+                ids.push("");
+            }
+            if (isIdValid(id2)) {
+                ids.push(id2);
+            } else {
+                ids.push("");
+            }
+            return ids;
+        }
+
+        function getSecondaryAdjacent(tile) {
+            if (tile.dataset.occupant == "white") {
+                id1 = ((parseInt(tile.id.charAt(0)) + 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 2));
+                id2 = ((parseInt(tile.id.charAt(0)) + 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 2));
+            } else {
+                id1 = ((parseInt(tile.id.charAt(0)) - 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() - 2));
+                id2 = ((parseInt(tile.id.charAt(0)) - 2).toString()).concat(String.fromCharCode(tile.id.charAt(1).charCodeAt() + 2));
+            }
+            ids = [];
+            if (isIdValid(id1)) {
+                ids.push(id1);
+            } else {
+                ids.push("");
+            }
+            if (isIdValid(id2)) {
+                ids.push(id2);
+            } else {
+                ids.push("");
+            }
+            return ids;
+        }
+
+        function makeLegalMove(tile1, tile2) {
+            if (getPrimaryAdjacent(tile1).includes(tile2.id)) {
+                tile2.dataset.occupant = tile1.dataset.occupant;
+                updateTile(tile2);
+                changeTurn();
+                return true;
+            }
+            secondaryTiles = getSecondaryAdjacent(tile1);
+            if (secondaryTiles.includes(tile2.id)) {
+                if (tile2.id == secondaryTiles[0]) {
+                    killTile = document.getElementById(getPrimaryAdjacent(tile1)[0]);
+                } else {
+                    killTile = document.getElementById(getPrimaryAdjacent(tile1)[1]);
+                }
+                if (areOccupantsInverse(tile1, killTile)) {
+                    killTile.dataset.occupant = "empty";
+                    updateTile(killTile);
+                    tile2.dataset.occupant = tile1.dataset.occupant;
+                    updateTile(tile2);
+                    if (getEligibleMoves(tile2)[1].length > 0) {
+                        tile2.dataset.jumping = "yes";
+                    } else {
+                        changeTurn();
+                    }
+                    tile1.dataset.jumping = "no";
                     return true;
-                
-            } else if (parseInt(tile2.id.charAt(0)) == parseInt(tile1.id.charAt(0)) + 2) {
-                if (tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() + 2) {
-                    killTile = document.getElementById(((parseInt(tile1.id.charAt(0)) + 1).toString()).concat(String.fromCharCode(tile1.id.charAt(1).charCodeAt() + 1)));
-                    if (killTile.dataset.occupant == "black") {
-                        killTile.dataset.occupant = "empty";
-                        updateTile(killTile);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else if (tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() - 2) {
-                    killTile = document.getElementById(((parseInt(tile1.id.charAt(0)) + 1).toString()).concat(String.fromCharCode(tile1.id.charAt(1).charCodeAt() - 1)));
-                    if (killTile.dataset.occupant == "black") {
-                        killTile.dataset.occupant = "empty";
-                        updateTile(killTile);
-                        return true;
-                    } else {
-                        return false;
-                    }
                 } else {
                     return false;
                 }
-            } else {
-                return false;
-            }
-        } else {
-            if ((parseInt(tile2.id.charAt(0)) == parseInt(tile1.id.charAt(0)) - 1) && ((tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() + 1) || (tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() - 1))) {
-                    changeTurn();
-                    return true;
-                
-            } else if (parseInt(tile2.id.charAt(0)) == parseInt(tile1.id.charAt(0)) - 2) {
-                if (tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() + 2) {
-                    killTile = document.getElementById(((parseInt(tile1.id.charAt(0)) - 1).toString()).concat(String.fromCharCode(tile1.id.charAt(1).charCodeAt() + 1)));
-                    if (killTile.dataset.occupant == "white") {
-                        killTile.dataset.occupant = "empty";
-                        updateTile(killTile);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else if (tile2.id.charAt(1).charCodeAt() == tile1.id.charAt(1).charCodeAt() - 2) {
-                    killTile = document.getElementById(((parseInt(tile1.id.charAt(0)) - 1).toString()).concat(String.fromCharCode(tile1.id.charAt(1).charCodeAt() - 1)));
-                    if (killTile.dataset.occupant == "white") {
-                        killTile.dataset.occupant = "empty";
-                        updateTile(killTile);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
             }
         }
-    }
 
-    function isOccupied(tile) {
-        return tile.dataset.occupant != "empty";
-    }
+        function isOccupied(tile) {
+            return tile.dataset.occupant != "empty";
+        }
 
-    function isSelected(tile) {
-        return tile.dataset.selected == "yes";
-    }
+        function isSelected(tile) {
+            return tile.dataset.selected == "yes";
+        }
 
-    function isAnySelected() {
-        return (document.querySelector('[data-selected="yes"]') != null);
-    }
+        function isAnySelected() {
+            return (document.querySelector('[data-selected="yes"]') != null);
+        }
 
-    function getSelected() {
-        return document.querySelector('[data-selected="yes"]');
-    }
+        function getSelected() {
+            return document.querySelector('[data-selected="yes"]');
+        }
 
-    function isEligible(tile) {
-        return tile.dataset.eligible == "yes";
-    }
+        function isEligible(tile) {
+            return tile.dataset.eligible == "yes";
+        }
 
-    function buildBoard() {
+        function areOccupantsInverse(tile1, tile2) {
+            return (tile1.dataset.occupant == "white" && tile2.dataset.occupant == "black") || (tile1.dataset.occupant == "black" && tile2.dataset.occupant == "white");
+        }
 
-        d1 = document.createElement("DIV");             
-        document.body.appendChild(d1);                      
-        att = document.createAttribute("class");
-        att.value = "row";
-        d1.setAttributeNode(att);
+        function getEligibleMoves(tile) {
+            primaryAdjacent = getPrimaryAdjacent(tile);
+            secondaryAdjacent = getSecondaryAdjacent(tile);
+            eligibleMoves = [];
+            eligibleMoves.push([]);
+            eligibleMoves.push([]);
+            if (secondaryAdjacent[0] && !isOccupied(document.getElementById(secondaryAdjacent[0])) && areOccupantsInverse(document.getElementById(primaryAdjacent[0]), tile)) {
+                eligibleMoves[1].push(secondaryAdjacent[0]);
+            }
+            if (secondaryAdjacent[1] && !isOccupied(document.getElementById(secondaryAdjacent[1])) && areOccupantsInverse(document.getElementById(primaryAdjacent[1]), tile)) {
+                eligibleMoves[1].push(secondaryAdjacent[1]);
+            }
+            if (eligibleMoves[1].length == 0) {
+                if (primaryAdjacent[0] && !isOccupied(document.getElementById(primaryAdjacent[0]))) {
+                    eligibleMoves[0].push(primaryAdjacent[0]);
+                }
+                if (primaryAdjacent[1] && !isOccupied(document.getElementById(primaryAdjacent[1]))) {
+                    eligibleMoves[0].push(primaryAdjacent[1]);
+                }
+            }
+            return eligibleMoves;
+        }
 
-        y = 1;
+        function refreshEligible() {
+            removeAllEligible();
+            if (isAnySelected()) {
+                eligibleList = getEligibleMoves(getSelected());
+                if (eligibleList[1].length > 0) {
+                    for (i = 0; i < eligibleList[1].length; i++) {
+                        eTile = document.getElementById(eligibleList[1][i]);
+                        eTile.dataset.eligible = "yes";
+                        updateTile(eTile);
+                    }
+                } else {
+                    for (i = 0; i < eligibleList[0].length; i++) {
+                        eTile = document.getElementById(eligibleList[0][i]);
+                        eTile.dataset.eligible = "yes";
+                        updateTile(eTile);
+                    }
+                }
+            } else {
+                updateAllEligible();
+            }
+        }
+
+        function updateAllEligible() {
+            if (turn == "white") {
+                allEligible = document.querySelectorAll('[data-occupant="white"]');
+            } else {
+                allEligible = document.querySelectorAll('[data-occupant="black"]');
+            }
+            anyJumping = false;
+            auxList = [];
+            for (i = 0; i < allEligible.length; i++) {
+                console.log(getEligibleMoves(allEligible[i])[1]);
+                console.log(getEligibleMoves(allEligible[i])[0]);
+                if (getEligibleMoves(allEligible[i])[1].length > 0) {
+                    if (!anyJumping) {
+                        anyJumping = true;
+                    }
+                    allEligible[i].dataset.eligible = "yes";
+                    updateTile(allEligible[i]);
+                }
+                else if (getEligibleMoves(allEligible[i])[0].length > 0 && !anyJumping) {
+                    console.log("entered block");
+                    auxList.push(allEligible[i]);
+                }
+            }
+            if (!anyJumping) {
+                for (i = 0; i < auxList.length; i++) {
+                    auxList[i].dataset.eligible = "yes";
+                    updateTile(auxList[i]);
+                }
+            }
+        }
+
+        function removeAllEligible() {
+            allEligible = document.querySelectorAll('[data-eligible="yes"]');
+            for (i = 0; i < allEligible.length; i++) {
+                allEligible[i].dataset.eligible = "no";
+                updateTile(allEligible[i]);
+            }
+        }
+
         
-        for (m = 0; m < 8; m++) {
-            c = document.createElement("DIV");                         
-            d1.appendChild(c);                      
-            att = document.createAttribute("class");
-            att.value = "column";
-            c.setAttributeNode(att);
-            if (m % 2 == 0) {
-                x = 0;
-            } else {
-                x = 1;
-            }
-            
-            for (n = 0; n < 8; n++) {
-                i = document.createElement("IMG");                         
-                c.appendChild(i);                      
-                att = document.createAttribute("src");
-                att1 = document.createAttribute("data-tile-colour");
-                att2 = document.createAttribute("data-occupant");
-                if (x % 2 == 0) {
-                    att.value = beigeFilePath;
-                    att1.value = "beige";
-                    att2.value = "empty";
-                } else if (y < 25) {
-                    att.value = brownWhiteFilePath;
-                    att1.value = "brown";
-                    att2.value = "white";
-                } else if (y > 40) {
-                    att.value = brownBlackFilePath;
-                    att1.value = "brown";
-                    att2.value = "black";
-                } else {
-                    att.value = brownFilePath;
-                    att1.value = "brown";
-                    att2.value = "empty";
-                }
-                i.setAttributeNode(att);
-                i.setAttributeNode(att1);
-                i.setAttributeNode(att2);
-                att = document.createAttribute("class");
-                att.value = "tile";
-                i.setAttributeNode(att);
-                att = document.createAttribute("id");
-                att.value = ((m + 1).toString()).concat(String.fromCharCode(97 + n));
-                i.setAttributeNode(att);
-                att = document.createAttribute("data-eligible");
-                att.value = "no";
-                i.setAttributeNode(att);
-                att = document.createAttribute("data-selected");
-                att.value = "no";
-                i.setAttributeNode(att);
-                att = document.createAttribute("onclick");
-                att.value = "selectTile(this)";
-                i.setAttributeNode(att);
-                x++;
-                y++;
-            }
-        }  
-    }
 
-</script>
+        function buildBoard() {
+
+            d1 = document.createElement("DIV");
+            document.body.appendChild(d1);
+            att = document.createAttribute("class");
+            att.value = "row";
+            d1.setAttributeNode(att);
+
+            y = 1;
+
+            for (m = 0; m < 8; m++) {
+                c = document.createElement("DIV");
+                d1.appendChild(c);
+                att = document.createAttribute("class");
+                att.value = "column";
+                c.setAttributeNode(att);
+                if (m % 2 == 0) {
+                    x = 0;
+                } else {
+                    x = 1;
+                }
+
+                for (n = 0; n < 8; n++) {
+                    i = document.createElement("IMG");
+                    c.appendChild(i);
+
+                    if (x % 2 == 0) {
+                        imgSrc = beigeFilePath;
+                        tileColour = "beige";
+                        occupant = "empty";
+                    } else if (y < 25) {
+                        imgSrc = brownWhiteFilePath;
+                        tileColour = "brown";
+                        occupant = "white";
+                    } else if (y > 40) {
+                        imgSrc = brownBlackFilePath;
+                        tileColour = "brown";
+                        occupant = "black";
+                    } else {
+                        imgSrc = brownFilePath;
+                        tileColour = "brown";
+                        occupant = "empty";
+                    }
+
+                    att = document.createAttribute("src");
+                    att.value = imgSrc;
+                    i.setAttributeNode(att);
+                    att = document.createAttribute("data-tile-colour");
+                    att.value = tileColour;
+                    i.setAttributeNode(att);
+                    att = document.createAttribute("data-occupant");
+                    att.value = occupant;
+                    i.setAttributeNode(att);
+                    att = document.createAttribute("data-eligible");
+                    att.value = "no";
+                    i.setAttributeNode(att);
+                    att = document.createAttribute("class");
+                    att.value = "tile";
+                    i.setAttributeNode(att);
+                    att = document.createAttribute("id");
+                    att.value = ((m + 1).toString()).concat(String.fromCharCode(97 + n));
+                    i.setAttributeNode(att);
+                    att = document.createAttribute("data-selected");
+                    att.value = "no";
+                    i.setAttributeNode(att);
+                    att = document.createAttribute("data-jumping");
+                    att.value = "no";
+                    i.setAttributeNode(att);
+                    att = document.createAttribute("onclick");
+                    att.value = "selectTile(this)";
+                    i.setAttributeNode(att);
+                    x++;
+                    y++;
+                }
+            }
+            updateAllEligible();
+        }
+
+    </script>
 
 </head>
 
 <body onload="buildBoard()">
 
-<h1>Parallel Chess</h1>
+    <h1>Parallel Chess</h1>
 
 </body>
 

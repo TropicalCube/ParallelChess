@@ -19,3 +19,6 @@ Entry 8: Added fully funcitonal checkers without kingpiece mechanic.
 Entry 9: Added resources and enabled them for the kingpiece mechanic.
 
 Entry 10: Fully functional checkers now. You can play a whole game, with kingpiece mechanic!
+
+Entry 11: Fixed Css bugs and changed title to Checkers
+>>>>>>> cc0709e8bf0ea4c6cd30a1d1c5bc778e9a20e667

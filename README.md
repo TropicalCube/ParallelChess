@@ -13,3 +13,5 @@ Entry 5: Made it scalable, and it won't break upon being resized. Why its left a
 Entry 6: Adding checkers but without the king piece mechanic. There is still onemajor bug present. Will be fixed in the next patch.
 
 Entry 7: Made checkerboard centered
+
+Entry 8: Added fully funcitonal checkers without kingpiece mechanic.

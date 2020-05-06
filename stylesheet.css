@@ -1,0 +1,22 @@
+.tile {
+    max-width: 5%;
+    height: auto;
+}
+
+.column {
+    display: flex;
+    position: relative;
+    padding-left: 30%;
+    width: 100%;
+}
+
+.row {
+    margin: auto;
+    padding: 20px;
+    width: 80%;
+    border: 10px solid green;
+}
+
+h1 {
+    text-align: center;
+}

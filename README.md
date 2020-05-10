@@ -23,3 +23,5 @@ Entry 10: Fully functional checkers now. You can play a whole game, with kingpie
 Entry 11: Fixed Css bugs and changed title to Checkers
 
 Entry 12: Separated JS and CSS code from main HTML doc into different files.
+
+Entry 13: Added some css code to make images not draggable or highlitable.

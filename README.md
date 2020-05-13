@@ -25,3 +25,5 @@ Entry 11: Fixed Css bugs and changed title to Checkers
 Entry 12: Separated JS and CSS code from main HTML doc into different files.
 
 Entry 13: Added some css code to make images not draggable or highlitable.
+
+Entry 14: Fixed a bug and made code more dynamic. Minor changes only.

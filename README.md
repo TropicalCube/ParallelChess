@@ -27,3 +27,5 @@ Entry 12: Separated JS and CSS code from main HTML doc into different files.
 Entry 13: Added some css code to make images not draggable or highlitable.
 
 Entry 14: Fixed a bug and made code more dynamic. Minor changes only.
+
+Entry 15: Added end game popup, and a button to play again and reset game state to base.

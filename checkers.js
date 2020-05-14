@@ -40,6 +40,10 @@ empty = "empty";
 yes = "yes";
 no = "no";
 
+blackWinsMsg = "Game over! Black wins!";
+whiteWinsMsg = "Game over! White wins!";
+stalemateMsg = "Game over! Stalemate!";
+
 turn = white;
 
 function changeTurn() {
@@ -69,9 +73,41 @@ function selectTile(obj) {
                 updateTile(getSelected());
                 getSelected().dataset.selected = no;
                 refreshEligible();
+                if (!isAnyWhite()) {
+                    blackWins();
+                } else if (!isAnyBlack()) {
+                    whiteWins();
+                } else if (!isAnyEligible()) {
+                    changeTurn();
+                    refreshEligible();
+                    if (!isAnyEligible()) {
+                        stalemate();
+                    } else {
+                        if (turn == white) {
+                            whiteWins();
+                        } else {
+                            blackWins();
+                        }
+                    }
+                }
             }
         }
     }
+}
+
+function whiteWins() {
+    document.getElementById("msg").innerHTML = whiteWinsMsg;
+    document.getElementById("replay").style.display = "block";
+}
+
+function blackWins() {
+    document.getElementById("msg").innerHTML = blackWinsMsg;
+    document.getElementById("replay").style.display = "block";
+}
+
+function stalemate() {
+    document.getElementById("msg").innerHTML = stalemateMsg;
+    document.getElementById("replay").style.display = "block";
 }
 
 function updateTile(obj) {
@@ -419,9 +455,21 @@ function removeAllEligible() {
     }
 }
 
+function isAnyWhite() {
+    return document.querySelector('[data-occupant='.concat(white, ']')) != null;
+}
+
+function isAnyBlack() {
+    return document.querySelector('[data-occupant='.concat(black, ']')) != null;
+}
+
+function isAnyEligible() {
+    return document.querySelector('[data-eligible='.concat(yes, ']')) != null;
+}
+
 function buildBoard() {
     d1 = document.createElement("DIV");
-    document.body.appendChild(d1);
+    document.getElementById("board").appendChild(d1);
     att = document.createAttribute("class");
     att.value = "row";
     d1.setAttributeNode(att);
@@ -492,4 +540,12 @@ function buildBoard() {
         }
     }
     updateAllEligible();
+}
+
+function resetGame() {
+    document.getElementById("board").innerHTML = "";
+    document.getElementById("msg").innerHTML = "";
+    document.getElementById("replay").style.display = "none";
+    turn = "white";
+    buildBoard();
 }

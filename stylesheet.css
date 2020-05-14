@@ -7,7 +7,7 @@
     -moz-user-select: none;
     -webkit-user-select: none;
 
-    user-drag: none; 
+    user-drag: none;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-drag: none;
@@ -21,7 +21,7 @@
     padding-left: 30%;
     width: 100%;
 
-    user-drag: none; 
+    user-drag: none;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-drag: none;
@@ -34,13 +34,27 @@
     padding: 20px;
     width: 80%;
     border: 10px solid green;
-    
-    user-drag: none; 
+
+    user-drag: none;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-drag: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+}
+
+.end_game {
+    text-align: center;
+    font-size: 30px;
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+#replay {
+    display: none;
+    margin:0 auto;
 }
 
 h1 {

@@ -46,6 +46,9 @@ stalemateMsg = "Game over! Stalemate!";
 
 turn = white;
 
+whiteAI = yes;
+blackAI = yes;
+
 function changeTurn() {
     if (turn == white) {
         turn = black;
@@ -89,6 +92,9 @@ function selectTile(obj) {
                             blackWins();
                         }
                     }
+                } else {
+                    updateUnclickable();
+                    delayedAIMove();
                 }
             }
         }
@@ -158,6 +164,28 @@ function updateTile(obj) {
     } else {
         obj.src = brownFilePath;
     }
+}
+
+function makeUnclickable(objList) {
+    for (i = 0; i < objList.length; i++) {
+        objList[i].style.pointerEvents = "none";
+    }
+}
+
+function makeClickable(objList) {
+    for (i = 0; i < objList.length; i++) {
+        objList[i].style.pointerEvents = "auto";
+    }
+}
+
+function updateUnclickable() {
+    if (whiteAI == yes) {
+        makeUnclickable(document.querySelectorAll('[data-occupant='.concat(white, ']')));
+    }
+    if (blackAI == yes) {
+        makeUnclickable(document.querySelectorAll('[data-occupant='.concat(black, ']')));
+    }
+    makeClickable(document.querySelectorAll('[data-occupant='.concat(empty, ']')));
 }
 
 function isIdValid(idString) {
@@ -306,6 +334,27 @@ function makeLegalMove(tile1, tile2) {
     }
 }
 
+function delayedAIMove() {
+    setTimeout(function () {
+        makeAIMove();
+    }, 1000);
+}
+
+function isAITurn() {
+    return (blackAI == yes && turn == black) || (whiteAI == yes && turn == white);
+}
+
+function makeAIMove() {
+    if (isAITurn()) {
+        mvList = getAllEligibleMoves();
+        if (mvList.length > 0) {
+            selectTile(mvList[Math.floor(Math.random() * mvList.length)]);
+            mvList = getAllEligibleMoves();
+            selectTile(mvList[Math.floor(Math.random() * mvList.length)]);
+        }
+    }
+}
+
 function isOccupied(tile) {
     return tile.dataset.occupant != empty;
 }
@@ -393,6 +442,10 @@ function getEligibleMoves(tile) {
     return eligibleMoves;
 }
 
+function getAllEligibleMoves() {
+    return document.querySelectorAll('[data-eligible='.concat(yes, ']'));
+}
+
 function refreshEligible() {
     removeAllEligible();
     if (isAnySelected()) {
@@ -434,8 +487,7 @@ function updateAllEligible() {
             }
             allEligible[i].dataset.eligible = yes;
             updateTile(allEligible[i]);
-        }
-        else if (getEligibleMoves(allEligible[i])[0].length > 0 && !anyJumping) {
+        } else if (getEligibleMoves(allEligible[i])[0].length > 0 && !anyJumping) {
             auxList.push(allEligible[i]);
         }
     }
@@ -546,6 +598,41 @@ function resetGame() {
     document.getElementById("board").innerHTML = "";
     document.getElementById("msg").innerHTML = "";
     document.getElementById("replay").style.display = "none";
-    turn = "white";
+    turn = white;
     buildBoard();
+}
+
+function startNewAIvsAI() {
+    resetGame();
+    whiteAI = yes;
+    blackAI = yes;
+    updateUnclickable();
+    delayedAIMove();
+}
+
+function startNewPlayervsAI() {
+    resetGame();
+    whiteAI = no;
+    blackAI = yes;
+    updateUnclickable();
+}
+
+function startNewPlayervsPlayerLocal() {
+    resetGame();
+    whiteAI = no;
+    blackAI = no;
+}
+
+function replayGame() {
+    if (whiteAI == yes) {
+        if (blackAI == yes) {
+            startNewAIvsAI();
+        } else {
+            startNewPlayervsAI();
+        }
+    } else if (blackAI == yes) {
+        startNewPlayervsAI();
+    } else {
+        startNewPlayervsPlayerLocal();
+    }
 }

@@ -11,15 +11,24 @@
 
 </head>
 
-<body onload="buildBoard()">
-
-    <h1>Checkers</h1>
-    <div id="board"></div>
-    <div class="end_game">
-        <p id="msg"></p>
-        <button id="replay" onclick="resetGame()">Play Again</button>
+<body onload="startNewAIvsAI()">
+    <div id="navbar">
+        <ul>
+            <button class="button" onclick="startNewAIvsAI()"><span>Home </span></button>
+            <button class="button" onclick="startNewPlayervsAI()"><span>Checkers vs AI </span></button>
+            <button class="button" onclick="startNewPlayervsPlayerLocal()"><span>Checkers Local Multiplayer
+                </span></button>
+        </ul>
     </div>
 
+    <div id="stage">
+        <h1>Checkers</h1>
+        <div id="board"></div>
+        <div class="end_game">
+            <p id="msg"></p>
+            <button id="replay" onclick="replayGame()">Play Again</button>
+        </div>
+    </div>
 </body>
 
 </html>

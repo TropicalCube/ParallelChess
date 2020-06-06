@@ -1,15 +1,18 @@
-var express = require('express');
-var app = express();
+express = require('express');
+app = express();
+__rootDir = 'rootDirectory';
 
-app.use(express.static('rootDirectory'));
+app.use(express.static(__rootDir));
 
 app.get('/', function (req, res) {
-    res.send('root');
-})
+    res.sendFile('ParallelChess.html', {
+        root: __rootDir
+    });
+});
 
-var server = app.listen(8081, function () {
-    var host = server.address().address
-    var port = server.address().port
+server = app.listen(8080, function () {
+    host = server.address().address
+    port = server.address().port
 
-    console.log("Example app listening at http://%s:%s", host, port)
+    console.log("Checkers listening at port %s", port)
 })

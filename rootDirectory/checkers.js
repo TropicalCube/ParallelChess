@@ -1,20 +1,20 @@
 imageFolderPath = "images";
 
-beigeFileName = "beige.PNG";
-brownFileName = "terracotta.PNG";
-brownEligibleFileName = "terracotta_eligible.PNG";
-brownWhiteFileName = "terracotta_white.PNG";
-brownWhiteSelectedFileName = "terracotta_white_selected.PNG";
-brownWhiteEligibleFileName = "terracotta_white_eligible.PNG";
-brownWhiteKingFileName = "terracotta_white_king.PNG";
-brownWhiteKingSelectedFileName = "terracotta_white_king_selected.PNG";
-brownWhiteKingEligibleFileName = "terracotta_white_king_eligible.PNG";
-brownBlackFileName = "terracotta_black.PNG";
-brownBlackSelectedFileName = "terracotta_black_selected.PNG";
-brownBlackEligibleFileName = "terracotta_black_eligible.PNG";
-brownBlackKingFileName = "terracotta_black_king.PNG";
-brownBlackKingSelectedFileName = "terracotta_black_king_selected.PNG";
-brownBlackKingEligibleFileName = "terracotta_black_king_eligible.PNG";
+beigeFileName = "beige.png";
+brownFileName = "terracotta.png";
+brownEligibleFileName = "terracotta_eligible.png";
+brownWhiteFileName = "terracotta_white.png";
+brownWhiteSelectedFileName = "terracotta_white_selected.png";
+brownWhiteEligibleFileName = "terracotta_white_eligible.png";
+brownWhiteKingFileName = "terracotta_white_king.png";
+brownWhiteKingSelectedFileName = "terracotta_white_king_selected.png";
+brownWhiteKingEligibleFileName = "terracotta_white_king_eligible.png";
+brownBlackFileName = "terracotta_black.png";
+brownBlackSelectedFileName = "terracotta_black_selected.png";
+brownBlackEligibleFileName = "terracotta_black_eligible.png";
+brownBlackKingFileName = "terracotta_black_king.png";
+brownBlackKingSelectedFileName = "terracotta_black_king_selected.png";
+brownBlackKingEligibleFileName = "terracotta_black_king_eligible.png";
 
 beigeFilePath = imageFolderPath.concat("/", beigeFileName);
 brownFilePath = imageFolderPath.concat("/", brownFileName);

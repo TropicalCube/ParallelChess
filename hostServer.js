@@ -10,7 +10,7 @@ app.get('/', function (req, res) {
     });
 });
 
-server = app.listen(8080, function () {
+server = app.listen(80, function () {
     host = server.address().address
     port = server.address().port
 

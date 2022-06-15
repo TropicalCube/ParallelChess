@@ -31,3 +31,5 @@ Entry 14: Fixed a bug and made code more dynamic. Minor changes only.
 Entry 15: Added end game popup, and a button to play again and reset game state to base.
 
 Entry 16: Added Nav bar, to select from three different modes. Can play checkers vs AI, local multiplayer, and AI vs AI. The home screen is set to AI vs AI. Implemented an "easy mode" ai which just does moves at random. 
+
+Entry 17: Changed port from 8080 to 80 for deployment on AWS EC2 Amazon Linux with node configured. Renamed some images to lowercase png because it was causing issues.
